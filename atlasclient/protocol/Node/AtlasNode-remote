@@ -26,10 +26,17 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
   print '  i32 ping()'
   print '  AtlasNodeInfo getInfo()'
   print '  void hello(AtlasNodeInfo info)'
+  print '  void join()'
   print '  void registerNode(AtlasNodeInfo info, AtlasNodeInfo via)'
   print '   getKnownNodes()'
   print '  void postMessage(AtlasMessage message)'
   print '  void registerMessageListing(string recipientKey, i64 messageId)'
+  print '  void unregisterMessageListing(i64 messageId)'
+  print '  string getAuthChallenge(string publicKey)'
+  print '  i64 confirmAuth(string response)'
+  print '   getListings()'
+  print '  i64 hasMessage(i64 id)'
+  print '  AtlasMessage retrieveMessage(i64 id)'
   print ''
   sys.exit(0)
 
@@ -99,6 +106,12 @@ elif cmd == 'hello':
     sys.exit(1)
   pp.pprint(client.hello(eval(args[0]),))
 
+elif cmd == 'join':
+  if len(args) != 0:
+    print 'join requires 0 args'
+    sys.exit(1)
+  pp.pprint(client.join())
+
 elif cmd == 'registerNode':
   if len(args) != 2:
     print 'registerNode requires 2 args'
@@ -122,6 +135,42 @@ elif cmd == 'registerMessageListing':
     print 'registerMessageListing requires 2 args'
     sys.exit(1)
   pp.pprint(client.registerMessageListing(args[0],eval(args[1]),))
+
+elif cmd == 'unregisterMessageListing':
+  if len(args) != 1:
+    print 'unregisterMessageListing requires 1 args'
+    sys.exit(1)
+  pp.pprint(client.unregisterMessageListing(eval(args[0]),))
+
+elif cmd == 'getAuthChallenge':
+  if len(args) != 1:
+    print 'getAuthChallenge requires 1 args'
+    sys.exit(1)
+  pp.pprint(client.getAuthChallenge(args[0],))
+
+elif cmd == 'confirmAuth':
+  if len(args) != 1:
+    print 'confirmAuth requires 1 args'
+    sys.exit(1)
+  pp.pprint(client.confirmAuth(args[0],))
+
+elif cmd == 'getListings':
+  if len(args) != 0:
+    print 'getListings requires 0 args'
+    sys.exit(1)
+  pp.pprint(client.getListings())
+
+elif cmd == 'hasMessage':
+  if len(args) != 1:
+    print 'hasMessage requires 1 args'
+    sys.exit(1)
+  pp.pprint(client.hasMessage(eval(args[0]),))
+
+elif cmd == 'retrieveMessage':
+  if len(args) != 1:
+    print 'retrieveMessage requires 1 args'
+    sys.exit(1)
+  pp.pprint(client.retrieveMessage(eval(args[0]),))
 
 else:
   print 'Unrecognized method %s' % cmd

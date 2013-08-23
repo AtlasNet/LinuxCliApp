@@ -2,8 +2,11 @@ from thrift.transport import TSocket
 from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
 
-from atlasnode.protocol.Node.ttypes import *
-from atlasnode.protocol.Node import AtlasNode
+from atlasclient.protocol.Node.ttypes import *
+from atlasclient.protocol.Node import AtlasNode
+
+
+__all__ = ['NodeClient']
 
 
 class NodeClient (object):
@@ -17,5 +20,11 @@ class NodeClient (object):
         self.transport.open()
         self.node_info = self.client.getInfo()
 
+    def postMessage(self, data, key):
+        msg = AtlasMessage()
+        msg.data = data
+        msg.recipientKey = key
+        self.client.postMessage(msg)
+        
     def disconnect(self):
         self.transport.close()
