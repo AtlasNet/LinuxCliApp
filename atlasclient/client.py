@@ -34,7 +34,7 @@ class AES (object):
 
     @staticmethod
     def generate_key():
-        return (os.urandom(256 / 8), os.urandom(256 / 8))
+        return (os.urandom(32), os.urandom(16))
 
     def __init__(self, key, iv):
         self.key = key
@@ -87,7 +87,11 @@ class AtlasContact (object):
     def verify_signature(self, data, signature):
         digest = EVP.MessageDigest('sha1')
         digest.update(data)
-        return self.public_key.verify_rsassa_pss(digest.digest(), signature) == 1
+        try:
+            #return self.public_key.verify(digest.digest(), signature, algo='sha512') == 1
+            return self.public_key.verify_rsassa_pss(digest.digest(), signature) == 1
+        except:
+            return False
 
 
 class AtlasClient (object):
@@ -137,6 +141,7 @@ class AtlasClient (object):
             digest = EVP.MessageDigest('sha1')
             digest.update(message.blob)
             signature = key.sign_rsassa_pss(digest.digest())
+            #signature = key.sign(digest.digest(), algo='sha512')
             message.signature = signature
         
         message.timestamp = int(calendar.timegm(datetime.utcnow().utctimetuple()))
